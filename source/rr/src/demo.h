@@ -32,6 +32,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 extern FILE *g_demo_filePtr;
 extern char g_firstDemoFile[BMAX_PATH];
 
+//unmaker
+extern char g_demo_legacy;
+
 extern int32_t demoplay_diffs;
 extern int32_t demoplay_showsync;
 extern int32_t demorec_diffcompress_cvar;

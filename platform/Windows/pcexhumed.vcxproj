@@ -29,9 +29,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PreferredToolArchitecture>x86</PreferredToolArchitecture>
+    <UseOfMfc>false</UseOfMfc>
+    <VCToolsVersion>14.36.32532</VCToolsVersion>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -62,7 +66,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <ConfigurationType>Application</ConfigurationType>
-    <OutDir>$(SolutionDir)..\..\</OutDir>
+    <OutDir>$(SolutionDir)Build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\Build\$(ProjectName)\$(Configuration)\</IntDir>
     <GenerateManifest>false</GenerateManifest>
     <EmbedManifest>false</EmbedManifest>
@@ -86,7 +90,7 @@
       <SupportJustMyCode>true</SupportJustMyCode>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>Default</LanguageStandard>
       <Optimization>Disabled</Optimization>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -96,6 +100,12 @@
     <Link>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <LargeAddressAware>true</LargeAddressAware>
+      <AssemblyDebug>false</AssemblyDebug>
+      <ShowProgress>LinkVerboseLib</ShowProgress>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <OptimizeReferences>false</OptimizeReferences>
+      <ProgramDatabaseFile />
     </Link>
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -105,7 +115,7 @@
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>Default</LanguageStandard>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
@@ -121,7 +131,7 @@
       <SupportJustMyCode>true</SupportJustMyCode>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>Default</LanguageStandard>
       <Optimization>Disabled</Optimization>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -139,7 +149,7 @@
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>Default</LanguageStandard>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>

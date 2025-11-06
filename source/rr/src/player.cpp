@@ -1904,12 +1904,21 @@ static int P_DisplayKnuckles(int knuckleShade)
 // Set C-CON's WEAPON and WORKSLIKE gamevars.
 void P_SetWeaponGamevars(int playerNum, const DukePlayer_t * const pPlayer)
 {
-    if (!WW2GI)
+    //unmaker
+    if (RR)
+    {
+        if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+            return;
+
+        Gv_SetVar(g_weaponVarID, pPlayer->curr_weapon, pPlayer->i, playerNum);
+        Gv_SetVar(g_worksLikeVarID, ((unsigned)pPlayer->curr_weapon < MAX_WEAPONS) ? PWEAPON(playerNum, pPlayer->curr_weapon, WorksLike) : -1, pPlayer->i, playerNum);
         return;
+    }
+    else if (!WW2GI)
+        return;
+
     Gv_SetVar(g_weaponVarID, pPlayer->curr_weapon, pPlayer->i, playerNum);
-    Gv_SetVar(g_worksLikeVarID,
-              ((unsigned)pPlayer->curr_weapon < MAX_WEAPONS) ? PWEAPON(playerNum, pPlayer->curr_weapon, WorksLike) : -1,
-              pPlayer->i, playerNum);
+    Gv_SetVar(g_worksLikeVarID, ((unsigned)pPlayer->curr_weapon < MAX_WEAPONS) ? PWEAPON(playerNum, pPlayer->curr_weapon, WorksLike) : -1, pPlayer->i, playerNum);
 }
 
 static void P_FireWeapon(int playerNum)
@@ -6028,13 +6037,24 @@ static void P_ProcessWeapon(int playerNum)
 
                 if (++(*weaponFrame) >= 22)
                 {
+                    //unmaker
+                    int16_t clip = 0;
+                    if (RR)
+                    {
+                        if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+                            clip = 6;
+                        else
+                            clip = aplWeaponClip[PISTOL_WEAPON][playerNum];
+                    }
+                    
                     if (pPlayer->ammo_amount[PISTOL_WEAPON] <= 0)
                     {
                         (*weaponFrame) = 0;
                         P_CheckWeapon(pPlayer);
                         break;
                     }
-                    else if ((pPlayer->ammo_amount[PISTOL_WEAPON]%6) == 0)
+                    //else if ((pPlayer->ammo_amount[PISTOL_WEAPON]%6) == 0)
+                    else if ((pPlayer->ammo_amount[PISTOL_WEAPON] % clip) == 0)
                     {
                         switch ((*weaponFrame))
                         {
@@ -6335,8 +6355,17 @@ static void P_ProcessWeapon(int playerNum)
 
             case FREEZE_WEAPON__STATIC:
                 (*weaponFrame)++;
-                if ((*weaponFrame) >= 7 && (*weaponFrame) <= 11)
-                    A_Shoot(pPlayer->i, FIRELASER);
+                //unmaker
+                if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+                {
+                    if ((*weaponFrame) >= 7 && (*weaponFrame) <= 11)
+                        A_Shoot(pPlayer->i, FIRELASER);
+                }
+                else
+                {
+                    if ((*weaponFrame) >= 7 && (*weaponFrame) <= 10)
+                        A_Shoot(pPlayer->i, FIRELASER);
+                }
 
                 if ((*weaponFrame) == 5)
                 {

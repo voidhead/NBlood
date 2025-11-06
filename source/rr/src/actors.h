@@ -257,10 +257,12 @@ extern int32_t      otherp;
 extern int32_t      ticrandomseed;
 extern int g_canSeePlayer;
 
+//unmaker
+extern char g_demo_legacy;
 
 int  A_CheckNoSE7Water(uspritetype const *pSprite, int sectNum, int sectLotag, int32_t *pOther);
 int  A_CheckSwitchTile(int spriteNum);
-int A_IncurDamage(int spriteNum);
+int  A_IncurDamage(int spriteNum);
 void A_AddToDeleteQueue(int spriteNum);
 void A_DeleteSprite(int spriteNum);
 void A_DoGuts(int spriteNum, int tileNum, int spawnCnt);

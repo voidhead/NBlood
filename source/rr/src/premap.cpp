@@ -1088,7 +1088,18 @@ void P_ResetWeapons(int playerNum)
     pPlayer->gotweapon                  = ((1 << PISTOL_WEAPON) | (1 << KNEE_WEAPON) | (1 << HANDREMOTE_WEAPON));
     if (REALITY)
         pPlayer->gotweapon             |= (1 << BOWLINGBALL_WEAPON);
-    pPlayer->ammo_amount[PISTOL_WEAPON] = min<int16_t>(pPlayer->max_ammo_amount[PISTOL_WEAPON], 48);
+
+    //unmaker
+    if (RR)
+    {
+        if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+            pPlayer->ammo_amount[PISTOL_WEAPON] = min<int16_t>(pPlayer->max_ammo_amount[PISTOL_WEAPON], 48);
+        else
+            pPlayer->ammo_amount[PISTOL_WEAPON] = min<int16_t>(pPlayer->max_ammo_amount[PISTOL_WEAPON], aplWeaponClip[PISTOL_WEAPON][playerNum] * 10);
+    }
+    else
+        pPlayer->ammo_amount[PISTOL_WEAPON] = min<int16_t>(pPlayer->max_ammo_amount[PISTOL_WEAPON], 48);
+
     if (RRRA)
     {
         g_chickenWeaponTimer = 0;

@@ -666,6 +666,7 @@ static int32_t G_StaticToDynamicSound(int32_t const sound)
 // After CON translation, get not-overridden members from weapondefaults[] back
 // into the live arrays! (That is, g_playerWeapon[][] for Lunatic, WEAPONx_*
 // gamevars on the CON side in C-CON.)
+
 #ifdef LUNATIC
 # define POSTADDWEAPONVAR(Weapidx, Membname) ADDWEAPONVAR(Weapidx, Membname)
 #else

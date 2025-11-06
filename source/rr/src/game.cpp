@@ -5325,7 +5325,13 @@ default_case1:
                     t->shade = -127;
                 }
                 else
-                    t->picnum = SHRINKSPARK + (((int32_t) totalclock >> 4) & 7);
+                {
+                    //unmaker
+                    if ((g_player[myconnectindex].ps->gm & MODE_DEMO) && (g_demo_legacy == 1))
+                        t->picnum = SHRINKSPARK + (((int32_t)totalclock >> 4) & 7);
+                    else
+                        t->picnum = SHRINKSPARK + (((int32_t)totalclock >> 2) & 7);
+                }
             }
             else
                 t->picnum = SHRINKSPARK+(((int32_t) totalclock>>4)&3);
@@ -5336,11 +5342,11 @@ default_case1:
             break;
         case GROWSPARK__STATIC:
             if (RR) goto default_case2;
-            t->picnum = GROWSPARK+(((int32_t) totalclock>>4)&3);
+            t->picnum = GROWSPARK + (((int32_t)totalclock >> 4) & 3);
             break;
         case SPIT__STATIC:
             if (!RR) goto default_case2;
-            t->picnum = SPIT + (((int32_t) totalclock >> 4) & 3);
+            t->picnum = SPIT + (((int32_t)totalclock >> 4) & 3);
             if (RRRA)
             {
                 if (sprite[pSprite->owner].picnum == MINION && sprite[pSprite->owner].pal == 8)
@@ -6071,7 +6077,7 @@ rrcoolexplosion1:
                     t->pal = 0;
             }
             else if (RR && t->picnum == FIRELASER)
-                t->picnum = FIRELASER+(((int32_t) totalclock>>2)&5);
+                t->picnum = FIRELASER + (((int32_t)totalclock >> 2) & 5);
             t->shade = -127;
             t->clipdist |= TSPR_FLAGS_DRAW_LAST | TSPR_FLAGS_NO_SHADOW;
             break;
@@ -9161,16 +9167,15 @@ void A_SpawnWallPopcorn(int spriteNum, int wallNum, int glassCnt)
 
 void A_SpawnGlass(int spriteNum, int glassCnt)
 {
-    for (; glassCnt>0; glassCnt--)
+    for (; glassCnt > 0; glassCnt--)
     {
         int const a = krand2()&2047;
         int const z = SZ(spriteNum)-((krand2()&16)<<8);
         int32_t r1 = krand2(), r2 = krand2(), r3 = krand2();
         if (REALITY)
             swap(&r1, &r3);
-        int const k
-        = A_InsertSprite(SECT(spriteNum), SX(spriteNum), SY(spriteNum), z, GLASSPIECES + (glassCnt % 3),
-                         r3 & 15, 36, 36, a, 32 + (r2 & 63), -512 - (r1 & 2047), spriteNum, 5);
+        int const k = A_InsertSprite(SECT(spriteNum), SX(spriteNum), SY(spriteNum), z, GLASSPIECES + (glassCnt % 3),
+                            r3 & 15, 36, 36, a, 32 + (r2 & 63), -512 - (r1 & 2047), spriteNum, 5);
         sprite[k].pal = sprite[spriteNum].pal;
     }
 }

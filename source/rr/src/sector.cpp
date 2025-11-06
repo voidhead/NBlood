@@ -3085,31 +3085,31 @@ void A_DamageObject(int spriteNum, int const dmgSrc)
     {
         switch (DYNAMICTILEMAP(sprite[dmgSrc].picnum))
         {
-        case RPG2__STATICRR:
-            if (!RRRA) break;
-            fallthrough__;
-        case OWHIP__STATICRR:
-        case UWHIP__STATICRR:
-        case TRIPBOMBSPRITE__STATIC:
-        case COOLEXPLOSION1__STATIC:
-            if (!RR) break;
-            fallthrough__;
-        case RADIUSEXPLOSION__STATIC:
-        case RPG__STATIC:
-        case FIRELASER__STATIC:
-        case HYDRENT__STATIC:
-        case HEAVYHBOMB__STATIC:
-        case DN64TILE2599__STATIC:
-        case DN64TILE3634__STATIC:
-            if (!REALITY && (sprite[dmgSrc].picnum == DN64TILE2599 || sprite[dmgSrc].picnum == DN64TILE3634))
+            case RPG2__STATICRR:
+                if (!RRRA) break;
+                fallthrough__;
+            case OWHIP__STATICRR:
+            case UWHIP__STATICRR:
+            case TRIPBOMBSPRITE__STATIC:
+            case COOLEXPLOSION1__STATIC:
+                if (!RR) break;
+                fallthrough__;
+            case RADIUSEXPLOSION__STATIC:
+            case RPG__STATIC:
+            case FIRELASER__STATIC:
+            case HYDRENT__STATIC:
+            case HEAVYHBOMB__STATIC:
+            case DN64TILE2599__STATIC:
+            case DN64TILE3634__STATIC:
+                if (!REALITY && (sprite[dmgSrc].picnum == DN64TILE2599 || sprite[dmgSrc].picnum == DN64TILE3634))
+                    break;
+                if (T1(spriteNum) == 0)
+                {
+                    CS(spriteNum) &= ~257;
+                    T1(spriteNum) = 1;
+                    A_Spawn(spriteNum,BURNING);
+                }
                 break;
-            if (T1(spriteNum) == 0)
-            {
-                CS(spriteNum) &= ~257;
-                T1(spriteNum) = 1;
-                A_Spawn(spriteNum,BURNING);
-            }
-            break;
         }
         break;
     }
@@ -3118,42 +3118,42 @@ void A_DamageObject(int spriteNum, int const dmgSrc)
     {
         switch (DYNAMICTILEMAP(sprite[dmgSrc].picnum))
         {
-        case RPG2__STATICRR:
-            if (!RRRA) break;
-            fallthrough__;
-        case OWHIP__STATICRR:
-        case UWHIP__STATICRR:
-        case TRIPBOMBSPRITE__STATIC:
-        case COOLEXPLOSION1__STATIC:
-            if (!RR) break;
-            fallthrough__;
-        case RADIUSEXPLOSION__STATIC:
-        case RPG__STATIC:
-        case FIRELASER__STATIC:
-        case HYDRENT__STATIC:
-        case HEAVYHBOMB__STATIC:
-        case DN64TILE2599__STATIC:
-        case DN64TILE3634__STATIC:
-            if (!REALITY && (sprite[dmgSrc].picnum == DN64TILE2599 || sprite[dmgSrc].picnum == DN64TILE3634))
-                break;
-            for (bssize_t k=64; k>0; k--)
-            {
-                int32_t r1 = krand2(), r2 = krand2(), r3 = krand2(), r4 = krand2(), r5 = krand2();
-                if (REALITY)
+            case RPG2__STATICRR:
+                if (!RRRA) break;
+                fallthrough__;
+            case OWHIP__STATICRR:
+            case UWHIP__STATICRR:
+            case TRIPBOMBSPRITE__STATIC:
+            case COOLEXPLOSION1__STATIC:
+                if (!RR) break;
+                fallthrough__;
+            case RADIUSEXPLOSION__STATIC:
+            case RPG__STATIC:
+            case FIRELASER__STATIC:
+            case HYDRENT__STATIC:
+            case HEAVYHBOMB__STATIC:
+            case DN64TILE2599__STATIC:
+            case DN64TILE3634__STATIC:
+                if (!REALITY && (sprite[dmgSrc].picnum == DN64TILE2599 || sprite[dmgSrc].picnum == DN64TILE3634))
+                    break;
+                for (bssize_t k=64; k>0; k--)
                 {
-                    swap(&r1, &r5);
-                    swap(&r2, &r4);
+                    int32_t r1 = krand2(), r2 = krand2(), r3 = krand2(), r4 = krand2(), r5 = krand2();
+                    if (REALITY)
+                    {
+                        swap(&r1, &r5);
+                        swap(&r2, &r4);
+                    }
+                    int newSprite =
+                        A_InsertSprite(SECT(spriteNum), SX(spriteNum), SY(spriteNum), SZ(spriteNum) - (r5 % (48 << 8)), SCRAP3 + (r4 & 3), -8, 48, 48,
+                            r3 & 2047, (r2 & 63) + 64, -(r1 & 4095) - (sprite[spriteNum].zvel >> 2), spriteNum, 5);
+                    sprite[newSprite].pal = 8;
                 }
-                int newSprite =
-                    A_InsertSprite(SECT(spriteNum), SX(spriteNum), SY(spriteNum), SZ(spriteNum) - (r5 % (48 << 8)), SCRAP3 + (r4 & 3), -8, 48, 48,
-                        r3 & 2047, (r2 & 63) + 64, -(r1 & 4095) - (sprite[spriteNum].zvel >> 2), spriteNum, 5);
-                sprite[newSprite].pal = 8;
-            }
-            //        case CACTUSBROKE:
-            if (PN(spriteNum) == CACTUS)
-                PN(spriteNum) = CACTUSBROKE;
-            CS(spriteNum) &= ~257;
-            break;
+                //        case CACTUSBROKE:
+                if (PN(spriteNum) == CACTUS)
+                    PN(spriteNum) = CACTUSBROKE;
+                CS(spriteNum) &= ~257;
+                break;
         }
         break;
     }

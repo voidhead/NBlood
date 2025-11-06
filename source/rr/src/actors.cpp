@@ -3060,8 +3060,17 @@ ACTOR_STATIC void G_MoveWeapons(void)
                                             int const newSprite = A_Spawn(spriteNum, CIRCLESTUCK);
                                             sprite[newSprite].xrepeat = 8;
                                             sprite[newSprite].yrepeat = 8;
-                                            sprite[newSprite].cstat = 16;
-                                            sprite[newSprite].ang = (sprite[newSprite].ang+512)&2047;
+
+                                            //unmaker
+                                            int playerNum = P_Get(pSprite->owner);
+                                            DukePlayer_t *const pPlayer = g_player[P_Get(playerNum)].ps;
+
+                                            if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+                                                sprite[newSprite].cstat = 16;
+                                            else
+                                                sprite[newSprite].cstat = 16 | 256;
+
+                                            sprite[newSprite].ang = (sprite[newSprite].ang + 512) & 2047;
                                             sprite[newSprite].clipdist = mulscale7(pSprite->xrepeat, tilesiz[pSprite->picnum].x);
                                         }
                                         DELETE_SPRITE_AND_CONTINUE(spriteNum);
@@ -6192,10 +6201,35 @@ DETONATEB:
                             A_Spawn(spriteNum, BURNING);
 
                         if (!RR && !REALITY && pSprite->zvel == 0)
-                            A_Spawn(spriteNum,EXPLOSION2BOT);
+                            A_Spawn(spriteNum, EXPLOSION2BOT);
 
-                        for (bssize_t x = 0; x < 8; ++x)
-                            RANDOMSCRAP(pSprite, spriteNum);
+                        //unmaker
+                        if (RR)
+                        {
+                            if (DYNAMICTILEMAP(pSprite->picnum) == HEAVYHBOMB__STATIC)
+                            {
+                                if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+                                {
+                                    for (bssize_t x = 0; x < 8; ++x)
+                                        RANDOMSCRAP(pSprite, spriteNum);
+                                }
+                                else
+                                {
+                                    for (bssize_t x = 0; x < 4; x++)
+                                        RANDOMSCRAP(pSprite, spriteNum);
+                                }
+                            }
+                            else
+                            {
+                                for (bssize_t x = 0; x < 8; ++x)
+                                    RANDOMSCRAP(pSprite, spriteNum);
+                            }
+                        }
+                        else
+                        {
+                            for (bssize_t x = 0; x < 8; ++x)
+                                RANDOMSCRAP(pSprite, spriteNum);
+                        }
                     }
                 }
 
@@ -6248,6 +6282,11 @@ DETONATEB:
                         P_AddAmmo(pPlayer, HANDBOMB_WEAPON, 1);
                         if (RR)
                             P_AddAmmo(pPlayer, RPG_WEAPON, 1);
+
+                        //unmaker
+                        if (RR)
+                            P_DoQuote(QUOTE_RRTNTSTICK, pPlayer);
+
                         A_PlaySound(REALITY ? 167 : DUKE_GET, pPlayer->i);
 
                         if ((pPlayer->gotweapon & (1<<HANDBOMB_WEAPON)) == 0 || pSprite->owner == pPlayer->i)
@@ -6492,10 +6531,10 @@ ACTOR_STATIC void G_MoveMisc(void)  // STATNUM 5
         if (!RR && pSprite->picnum > NUKEBUTTON && pSprite->picnum <= NUKEBUTTON+3)
             switchPic = NUKEBUTTON;
 
-        if (pSprite->picnum > GLASSPIECES && pSprite->picnum <= GLASSPIECES+2)
+        if (pSprite->picnum > GLASSPIECES && pSprite->picnum <= GLASSPIECES + 2)
             switchPic = GLASSPIECES;
 
-        if (pSprite->picnum == INNERJAW+1)
+        if (pSprite->picnum == INNERJAW + 1)
             switchPic--;
 
         if ((pSprite->picnum == MONEY+1) || (!RR && (pSprite->picnum == MAIL+1 || pSprite->picnum == PAPER+1)))
@@ -7072,7 +7111,7 @@ jib_code:
                     pSprite->yrepeat >>= 1;
                     if (rnd(96))
                         setsprite(spriteNum,(vec3_t *)pSprite);
-                    pData[0]++;//Number of bounces
+                    pData[0]++;     //Number of bounces
                 }
                 else if (pData[0] == 3)
                     DELETE_SPRITE_AND_CONTINUE(spriteNum);

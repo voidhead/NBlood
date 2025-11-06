@@ -29,9 +29,14 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <VCToolsVersion>14.36.32532</VCToolsVersion>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PreferredToolArchitecture>x86</PreferredToolArchitecture>
+    <UseOfMfc>false</UseOfMfc>
+    <VCToolsVersion>14.36.32532</VCToolsVersion>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <EnableASAN>false</EnableASAN>
@@ -64,7 +69,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <ConfigurationType>Application</ConfigurationType>
-    <OutDir>$(SolutionDir)..\..\</OutDir>
+    <OutDir>$(SolutionDir)Build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\Build\$(ProjectName)\$(Configuration)\</IntDir>
     <GenerateManifest>false</GenerateManifest>
     <EmbedManifest>false</EmbedManifest>
@@ -74,6 +79,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>$(ProjectName)_test</TargetName>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>$(ProjectName)_test</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
@@ -88,7 +100,7 @@
       <SupportJustMyCode>true</SupportJustMyCode>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>Default</LanguageStandard>
       <Optimization>Disabled</Optimization>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -98,6 +110,15 @@
     <Link>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <StripPrivateSymbols>
+      </StripPrivateSymbols>
+      <LargeAddressAware>true</LargeAddressAware>
+      <AssemblyDebug>false</AssemblyDebug>
+      <ShowProgress>LinkVerboseLib</ShowProgress>
+      <OptimizeReferences>false</OptimizeReferences>
+      <ProgramDatabaseFile />
+      <AdditionalOptions>/DEBUG:NONE</AdditionalOptions>
     </Link>
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -107,10 +128,16 @@
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp14</LanguageStandard>
-      <ExceptionHandling>SyncCThrow</ExceptionHandling>
+      <LanguageStandard>Default</LanguageStandard>
+      <ExceptionHandling>false</ExceptionHandling>
       <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+    <PostBuildEvent>
+      <Command>"$(MSBuildProgramFiles32)\StripReloc\StripReloc.exe" "$(TargetPath)" /B /C</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -123,7 +150,7 @@
       <SupportJustMyCode>true</SupportJustMyCode>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>Default</LanguageStandard>
       <Optimization>Disabled</Optimization>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -132,6 +159,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <ShowProgress>LinkVerboseLib</ShowProgress>
+      <AssemblyDebug>false</AssemblyDebug>
+      <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences>false</OptimizeReferences>
     </Link>
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -141,9 +173,10 @@
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp14</LanguageStandard>
-      <ExceptionHandling>SyncCThrow</ExceptionHandling>
+      <LanguageStandard>Default</LanguageStandard>
+      <ExceptionHandling>false</ExceptionHandling>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;RENDERTYPESDL=1;MIXERTYPESDL=1;SDL_USEFOLDER;SDL_TARGET=2;USE_OPENGL=1;POLYMER=1;STARTUP_WINDOW;USE_LIBVPX;HAVE_VORBIS;HAVE_XMP;USE_MIMALLOC;MI_USE_RTLGENRANDOM;MI_SHOW_ERRORS;MI_TRACK_ASAN;NOONE_EXTENSIONS=1;NOASM=1</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
