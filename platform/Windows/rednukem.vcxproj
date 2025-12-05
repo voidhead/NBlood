@@ -34,7 +34,8 @@
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PreferredToolArchitecture>x86</PreferredToolArchitecture>
+    <PreferredToolArchitecture>
+    </PreferredToolArchitecture>
     <UseOfMfc>false</UseOfMfc>
     <VCToolsVersion>14.36.32532</VCToolsVersion>
   </PropertyGroup>
@@ -83,6 +84,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>$(ProjectName)_test</TargetName>
     <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>$(ProjectName)_test</TargetName>
@@ -136,7 +138,9 @@
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>"$(MSBuildProgramFiles32)\StripReloc\StripReloc.exe" "$(TargetPath)" /B /C</Command>
+      <Command>"$(MSBuildProgramFiles32)\StripReloc\StripReloc.exe" "$(TargetPath)" /B /C
+copy "e:\Games\Rednukem\rednukem_test.exe" "e:\Games\Rednukem\rednukem_test.exe.bak"
+copy "$(TargetPath)" "e:\Games\Rednukem\rednukem_test.exe"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

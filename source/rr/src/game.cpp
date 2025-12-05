@@ -2796,8 +2796,8 @@ rrbloodpool_fallthrough:
 
                 if (sprite[spriteNum].picnum == APLAYER)
                 {
-                    int const                 playerNum = P_Get(spriteNum);
-                    const DukePlayer_t *const pPlayer   = g_player[playerNum].ps;
+                    int const playerNum               = P_Get(spriteNum);
+                    const DukePlayer_t *const pPlayer = g_player[playerNum].ps;
 
                     shellAng = fix16_to_int(pPlayer->q16ang) - (krand2() & 63) + 8;  // Fine tune
 
@@ -2812,8 +2812,8 @@ rrbloodpool_fallthrough:
                 }
                 else
                 {
-                    shellAng          = pSprite->ang;
-                    pSprite->z = sprite[spriteNum].z - PHEIGHT + (RR ? (7 << 8) : (3 << 8));
+                    shellAng       = pSprite->ang;
+                    pSprite->z     = sprite[spriteNum].z - PHEIGHT + (RR ? (7 << 8) : (3 << 8));
                 }
 
                 if (REALITY)
@@ -2843,6 +2843,10 @@ rrbloodpool_fallthrough:
                     pSprite->xrepeat = pSprite->yrepeat = 2;
                 else
                     pSprite->xrepeat = pSprite->yrepeat = 4;
+
+                //unmaker
+                //if (RR && ((g_player[myconnectindex].ps->gm & MODE_DEMO) && (g_demo_legacy)) == false)
+                //    pSprite->clipdist = 2;  // 1;
 
                 changespritestat(newSprite, STAT_MISC);
             }
@@ -6222,7 +6226,7 @@ rrcoolexplosion1:
             t->picnum = WATERSPLASH2+T2(i);
             break;
         case SHELL__STATIC:
-            t->picnum = pSprite->picnum+(T1(i)&1);
+            t->picnum = pSprite->picnum+(T1(i) & 1);
             fallthrough__;
         case SHOTGUNSHELL__STATIC:
             t->cstat |= 12;

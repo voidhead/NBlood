@@ -871,6 +871,17 @@ growspark_rr:
                         {
                             int jibSprite = A_Spawn(spawnedSprite, JIBS6);
 
+                            /*
+                            //unmaker   // TODO
+                            if (RR)
+                            //if (((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1)) == false)
+                            if (PN(spriteNum) == HULK || PN(spriteNum) == HULKSTAYPUT)
+                            {
+                                if (krand2() & 255) //GREEN_BLOOD_FREQUENCY)
+                                    sprite[jibSprite].pal = 8;
+                            }
+                            */
+
                             sprite[spawnedSprite].xrepeat = sprite[spawnedSprite].yrepeat = 0;
                             sprite[jibSprite].z += ZOFFSET6;
                             sprite[jibSprite].xvel    = 16;
@@ -947,7 +958,6 @@ growspark_rr:
                     }
 
                 SKIPBULLETHOLE:
-
                     HandleHitWall(&hitData);
                     A_DamageWall(spawnedSprite, hitData.wall, &hitData.xyz, REALITY ? projecTile : SHOTSPARK1);
                 }
@@ -1911,7 +1921,7 @@ void P_SetWeaponGamevars(int playerNum, const DukePlayer_t * const pPlayer)
             return;
 
         Gv_SetVar(g_weaponVarID, pPlayer->curr_weapon, pPlayer->i, playerNum);
-        Gv_SetVar(g_worksLikeVarID, ((unsigned)pPlayer->curr_weapon < MAX_WEAPONS) ? PWEAPON(playerNum, pPlayer->curr_weapon, WorksLike) : -1, pPlayer->i, playerNum);
+        //Gv_SetVar(g_worksLikeVarID, ((unsigned)pPlayer->curr_weapon < MAX_WEAPONS) ? PWEAPON(playerNum, pPlayer->curr_weapon, WorksLike) : -1, pPlayer->i, playerNum);
         return;
     }
     else if (!WW2GI)
@@ -6058,12 +6068,12 @@ static void P_ProcessWeapon(int playerNum)
                     {
                         switch ((*weaponFrame))
                         {
-                        case 24:
-                            A_PlaySound(EJECT_CLIP, pPlayer->i);
-                            break;
-                        case 30:
-                            A_PlaySound(INSERT_CLIP, pPlayer->i);
-                            break;
+                            case 24:
+                                A_PlaySound(EJECT_CLIP, pPlayer->i);
+                                break;
+                            case 30:
+                                A_PlaySound(INSERT_CLIP, pPlayer->i);
+                                break;
                         }
                     }
                     else
@@ -6824,12 +6834,12 @@ static void P_ProcessWeapon(int playerNum)
                     {
                         switch ((*weaponFrame))
                         {
-                        case 5:
-                            A_PlaySound(EJECT_CLIP, pPlayer->i);
-                            break;
-                        case 8:
-                            A_PlaySound(INSERT_CLIP, pPlayer->i);
-                            break;
+                            case 5:
+                                A_PlaySound(EJECT_CLIP, pPlayer->i);
+                                break;
+                            case 8:
+                                A_PlaySound(INSERT_CLIP, pPlayer->i);
+                                break;
                         }
                     }
                 }

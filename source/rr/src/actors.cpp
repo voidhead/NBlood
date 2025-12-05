@@ -170,7 +170,6 @@ void A_RadiusDamage(int spriteNum, int blastRadius, int dmg1, int dmg2, int dmg3
     while (sectorCount < numSectors);
 
 SKIPWALLCHECK:
-
     // this is really weird
     int32_t const zRand = (RR ? -(24<<8) : -ZOFFSET2) + (krand2()&(ZOFFSET5-1));
 
@@ -230,20 +229,20 @@ SKIPWALLCHECK:
 
                 if (RR || pSprite->picnum != SHRINKSPARK)
                 {
-                    if (spriteDist < blastRadius/3)
+                    if (spriteDist < blastRadius / 3)
                     {
                         if (dmg4 == dmg3) dmg4++;
                         dmgActor.extra = dmg3 + (krand2()%(dmg4-dmg3));
                     }
-                    else if (spriteDist < (2*blastRadius)/3)
+                    else if (spriteDist < (2*blastRadius) / 3)
                     {
                         if (dmg3 == dmg2) dmg3++;
-                        dmgActor.extra = dmg2 + (krand2()%(dmg3-dmg2));
+                        dmgActor.extra = dmg2 + (krand2() % (dmg3 - dmg2));
                     }
                     else if (spriteDist < blastRadius)
                     {
                         if (dmg2 == dmg1) dmg2++;
-                        dmgActor.extra = dmg1 + (krand2()%(dmg2-dmg1));
+                        dmgActor.extra = dmg1 + (krand2() % (dmg2-dmg1));
                     }
 
                     if (!A_CheckSpriteFlags(otherSprite, SFLAG_NODAMAGEPUSH))
@@ -276,8 +275,7 @@ SKIPWALLCHECK:
                 }
                 else if (pSprite->extra == 0) dmgActor.extra = 0;
 
-                if (pOther->picnum != RADIUSEXPLOSION &&
-                        pSprite->owner >= 0 && sprite[pSprite->owner].statnum < MAXSTATUS)
+                if (pOther->picnum != RADIUSEXPLOSION && pSprite->owner >= 0 && sprite[pSprite->owner].statnum < MAXSTATUS)
                 {
                     if (pOther->picnum == APLAYER)
                     {
@@ -596,7 +594,8 @@ void A_DoGuts(int spriteNum, int tileNum, int spawnCnt)
     else if (RRRA && pSprite->picnum == MINION && (pSprite->pal == 8 || pSprite->pal == 19))
         pal = pSprite->pal;
 
-    if (RR) repeat.x >>= 1, repeat.y >>= 1;
+    if (RR)
+        repeat.x >>= 1, repeat.y >>= 1;
 
     for (bssize_t j=spawnCnt; j>0; j--)
     {
@@ -615,6 +614,47 @@ void A_DoGuts(int spriteNum, int tileNum, int spawnCnt)
         {
             sprite[i].xrepeat >>= 2;
             sprite[i].yrepeat >>= 2;
+        }
+
+        //unmaker
+        if (RR)
+        {
+            int pNum = 0;
+            for (bssize_t TRAVERSE_CONNECT(playerNum))
+                pNum = playerNum;
+
+            DukePlayer_t *const pPlayer = g_player[pNum].ps;
+
+            if (((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1)) == false)
+            {
+                if ((krand2() >> 8) >= 127)
+                    sprite[i].cstat |= 4;
+                if ((krand2() >> 8) >= 127)
+                    sprite[i].cstat |= 8;
+
+                if (PN(i) == MINJIBA || PN(i) == MINJIBB)
+                    sprite[i].xrepeat = sprite[i].yrepeat = 12;
+                else if (PN(i) == MINJIBC)
+                    sprite[i].xrepeat = sprite[i].yrepeat = 8;
+
+                else if (PN(i) == HULKJIBA || PN(i) == HULKJIBB)
+                    sprite[i].xrepeat = sprite[i].yrepeat = 24;
+                else if (PN(i) == HULKJIBC)
+                    sprite[i].xrepeat = sprite[i].yrepeat = 12;
+
+                else if (PN(i) == BILLYJIBA || PN(i) == BILLYJIBB)
+                    sprite[i].xrepeat = sprite[i].yrepeat = 14;
+
+                else if (PN(i) == COOTJIBB)
+                    sprite[i].xrepeat = sprite[i].yrepeat = 12;
+
+                else if (PN(i) == JIBS1 || PN(i) == JIBS4)
+                    sprite[i].xrepeat = sprite[i].yrepeat = 14;
+                else if (PN(i) == JIBS2)
+                    sprite[i].xrepeat = sprite[i].yrepeat = 10;
+                else if (PN(i) == JIBS3)
+                    sprite[i].xrepeat = sprite[i].yrepeat = 12;
+            }
         }
 
         sprite[i].pal = pal;
@@ -3062,6 +3102,7 @@ ACTOR_STATIC void G_MoveWeapons(void)
                                             sprite[newSprite].yrepeat = 8;
 
                                             //unmaker
+                                            //if (sprite[pSprite->owner].picnum == APLAYER)
                                             int playerNum = P_Get(pSprite->owner);
                                             DukePlayer_t *const pPlayer = g_player[P_Get(playerNum)].ps;
 
@@ -6203,7 +6244,7 @@ DETONATEB:
                         if (!RR && !REALITY && pSprite->zvel == 0)
                             A_Spawn(spriteNum, EXPLOSION2BOT);
 
-                        //unmaker
+                        //unmaker   // TODO
                         if (RR)
                         {
                             if (DYNAMICTILEMAP(pSprite->picnum) == HEAVYHBOMB__STATIC)
@@ -6855,7 +6896,7 @@ jib_code:
                 if (ceilZ == floorZ || sectNum < 0 || sectNum >= MAXSECTORS)
                     DELETE_SPRITE_AND_CONTINUE(spriteNum);
 
-                if (pSprite->z < floorZ-(2<<8))
+                if (pSprite->z < floorZ - (2<<8))
                 {
                     if (pData[1] < 2) pData[1]++;
                     else if (sector[sectNum].lotag != ST_2_UNDERWATER)
@@ -6921,7 +6962,29 @@ jib_code:
                     }
                     else
                     {
+                        /*
+                        //unmaker
+                        if (RR)
+                        {
+                            int32_t playerDist;
+                            int playerNum = A_FindPlayer(pSprite, &playerDist);
+                            DukePlayer_t *const pPlayer = g_player[playerNum].ps;
+
+                            if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+                                pSprite->picnum = JIBS6;
+                            if (pSprite->picnum == HULKJIBA || pSprite->picnum == HULKJIBB || pSprite->picnum == HULKJIBC)
+                            { 
+                                if (krand2() & GREEN_BLOOD_FREQUENCY)
+                                    pSprite->pal = 8;
+
+                                pSprite->picnum = JIBS6;
+                            }
+                        }
+                        else
+                        */
+
                         pSprite->picnum = JIBS6;
+
                         pData[0] = 0;
                         pData[1] = 0;
                     }
@@ -7046,13 +7109,12 @@ jib_code:
                 goto next_sprite;
             }
 
-
             case SHELL__STATIC:
             case SHOTGUNSHELL__STATIC:
 
                 A_SetSprite(spriteNum,CLIPMASK0);
 
-                if (sectNum < 0 || (!RR && (sector[sectNum].floorz + (24<<8)) < pSprite->z))
+                if (sectNum < 0 || (!RR && (sector[sectNum].floorz + (24 << 8)) < pSprite->z))
                     DELETE_SPRITE_AND_CONTINUE(spriteNum);
 
                 if (sector[sectNum].lotag == ST_2_UNDERWATER)
@@ -7064,11 +7126,16 @@ jib_code:
                         pData[0]++;
                         pData[0] &= 3;
                     }
-                    if (pSprite->zvel < 128) pSprite->zvel += (g_spriteGravity/13); // 8
-                    else pSprite->zvel -= 64;
+
+                    if (pSprite->zvel < 128)
+                        pSprite->zvel += (g_spriteGravity / 13); // 8
+                    else
+                        pSprite->zvel -= 64;
+
                     if (pSprite->xvel > 0)
                         pSprite->xvel -= 4;
-                    else pSprite->xvel = 0;
+                    else
+                        pSprite->xvel = 0;
                 }
                 else
                 {
@@ -7079,7 +7146,10 @@ jib_code:
                         pData[0]++;
                         pData[0] &= 3;
                     }
-                    if (pSprite->zvel < 512) pSprite->zvel += (g_spriteGravity/3); // 52;
+
+                    if (pSprite->zvel < 512)
+                        pSprite->zvel += (g_spriteGravity / 3); // 52;
+
                     if (!REALITY)
                     {
                         if (pSprite->xvel > 0)
@@ -7089,7 +7159,21 @@ jib_code:
                     }
                 }
 
-                goto next_sprite;
+                //unmaker
+                if (RR)
+                {
+                    int const playerNum = A_FindPlayer(pSprite, &playerDist);
+                    DukePlayer_t *const pPlayer = g_player[P_Get(playerNum)].ps;
+                    if (((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1)) == false)
+                    {
+                        if (!G_HaveActor(sprite[spriteNum].picnum))
+                            goto next_sprite;
+                        A_Execute(spriteNum, playerNum, playerDist);
+                        goto next_sprite;
+                    }
+                }
+                else
+                    goto next_sprite;
 
             case GLASSPIECES__STATIC:
             case POPCORN__STATICRR:

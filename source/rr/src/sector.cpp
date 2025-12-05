@@ -3495,17 +3495,41 @@ default_case:
                     sprite[dmgSrc].extra <<= 1;
 
                 if ((PN(spriteNum) != DRONE) && (RR || ((PN(spriteNum) != ROTATEGUN) && (PN(spriteNum) != COMMANDER) && (PN(spriteNum) < GREENSLIME || PN(spriteNum) > GREENSLIME+7))))
-                    if (REALITY || sprite[dmgSrc].picnum != FREEZEBLAST)
-                        if (!A_CheckSpriteFlags(spriteNum, SFLAG_BADGUY) || REALITY)
+                if (REALITY || sprite[dmgSrc].picnum != FREEZEBLAST)
+                if (!A_CheckSpriteFlags(spriteNum, SFLAG_BADGUY) || REALITY)
+                {
+                    int const newSprite = A_Spawn(dmgSrc, JIBS6);
+
+                    //unmaker
+                    if (RR)
+                    {
+                        int pNum = 0;
+                        for (bssize_t TRAVERSE_CONNECT(playerNum))
+                            pNum = playerNum;
+
+                        DukePlayer_t *const pPlayer = g_player[pNum].ps;
+                        
+                        if (((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1)) == false)
                         {
-                            int const newSprite       = A_Spawn(dmgSrc, JIBS6);
-                            sprite[newSprite].z      += ZOFFSET6;
-                            if (sprite[dmgSrc].pal == 6)
-                                sprite[newSprite].pal = 6;
-                            sprite[newSprite].xvel    = 16;
-                            sprite[newSprite].xrepeat = sprite[newSprite].yrepeat = 24;
-                            sprite[newSprite].ang    += 32 - (krand2() & 63);
+                            if ((PN(spriteNum) == HULK || (PN(spriteNum) == HULKSTAYPUT)))
+                            {
+                                if ((krand2() >> 8) >= (255 - GREEN_BLOOD_FREQUENCY))
+                                    sprite[newSprite].pal = 8;
+                                else
+                                    sprite[newSprite].pal = 0;
+                            }
                         }
+                    }
+
+                    sprite[newSprite].z += ZOFFSET6;
+                            
+                    if (sprite[dmgSrc].pal == 6)
+                        sprite[newSprite].pal = 6;
+                            
+                    sprite[newSprite].xvel    = 16;
+                    sprite[newSprite].xrepeat = sprite[newSprite].yrepeat = 24;
+                    sprite[newSprite].ang    += 32 - (krand2() & 63);
+                }
 
                 int const damageOwner = sprite[dmgSrc].owner;
 

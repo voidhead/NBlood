@@ -33,6 +33,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 extern "C" {
 #endif
 
+//unmaker
+#define GREEN_BLOOD_FREQUENCY 150
+
 #define MAXCYCLERS      1024
 #define MAXANIMATES     1024
 #define MAXANIMWALLS    512

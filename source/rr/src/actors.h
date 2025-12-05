@@ -259,6 +259,7 @@ extern int g_canSeePlayer;
 
 //unmaker
 extern char g_demo_legacy;
+#define GREEN_BLOOD_FREQUENCY 150
 
 int  A_CheckNoSE7Water(uspritetype const *pSprite, int sectNum, int sectLotag, int32_t *pOther);
 int  A_CheckSwitchTile(int spriteNum);
