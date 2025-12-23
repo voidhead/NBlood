@@ -2898,6 +2898,7 @@ GAMEEXEC_STATIC void VM_Execute(native_t loop)
                             continue;
                         }
                     }
+
                     Bsprintf(tempbuf, "CONLOGVAR: L=%d %s ", VM_DECODE_LINE_NUMBER(g_tw), aGameVars[lVarID].szLabel);
 
                     if (aGameVars[lVarID].flags & GAMEVAR_READONLY)
@@ -2917,10 +2918,15 @@ GAMEEXEC_STATIC void VM_Execute(native_t loop)
                     {
                         Bsprintf(szBuf, " (Global)");
                     }
+
                     Bstrcat(tempbuf, szBuf);
                     Bsprintf(szBuf, " =%d\n", Gv_GetVar(lVarID) * m);
                     Bstrcat(tempbuf, szBuf);
-                    initprintf(OSDTEXT_GREEN "%s", tempbuf);
+
+                    //unmaker
+                    OSD_Printf(OSDTEXT_GREEN "%s", tempbuf);
+                    //initprintf(OSDTEXT_GREEN "%s", tempbuf);
+
                     insptr++;
                     continue;
                 }

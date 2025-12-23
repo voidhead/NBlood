@@ -2352,6 +2352,33 @@ rrbloodpool_fallthrough:
             if (spriteNum >= 0 && (sprite[spriteNum].pal == 6 || (REALITY && sprite[spriteNum].picnum == NEWBEAST)))
                 pSprite->pal = 6;
 
+            //unmaker
+            if (RR)
+            {
+                /*
+                int pNum = 0;
+                for (bssize_t TRAVERSE_CONNECT(playerNum)) pNum = playerNum;
+                DukePlayer_t *const pPlayer = g_player[pNum].ps;
+                if (((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1)) == false)
+                */
+
+                if (((g_player[myconnectindex].ps->gm & MODE_DEMO) && (g_demo_legacy == 1)) == false)
+                {
+                    if ((PN(spriteNum) == HULK || (PN(spriteNum) == HULKSTAYPUT)))
+                    {
+                        if ((krand2() >> 8) >= (255 - GREEN_BLOOD_FREQUENCY))
+                            pSprite->pal = 8;
+                        else
+                        {
+                            if (spriteNum >= 0 && sprite[spriteNum].pal == 6)
+                                pSprite->pal = 6;
+                            else
+                                pSprite->pal = 0;
+                        }
+                    }
+                }
+            }
+
             A_AddToDeleteQueue(newSprite);
             changespritestat(newSprite, STAT_MISC);
             break;

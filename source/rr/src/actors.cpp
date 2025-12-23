@@ -3176,7 +3176,9 @@ ACTOR_STATIC void G_MoveWeapons(void)
                         {
                             if (!RRRA && (pSprite->picnum == RPG2 || pSprite->picnum == RRTILE1790))
                                 break;
+
                             int const newSprite = A_Spawn(spriteNum, EXPLOSION2);
+
                             if (pSprite->picnum == RPG2)
                             {
                                 pSprite->extra = 150;
@@ -3199,7 +3201,47 @@ ACTOR_STATIC void G_MoveWeapons(void)
                             else if ((moveSprite & 49152) == 16384)
                             {
                                 if (!RR && !REALITY && pSprite->zvel > 0)
+                                {
                                     A_Spawn(spriteNum, EXPLOSION2BOT);
+                                }
+                                //unmaker
+                                else if (RR && pSprite->picnum == RPG)
+                                {
+                                    int playerNum = P_Get(pSprite->owner);
+                                    DukePlayer_t *const pPlayer = g_player[P_Get(playerNum)].ps;
+
+                                    if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+                                    {
+                                        sprite[newSprite].cstat |= 8;
+                                        sprite[newSprite].z += (48 << 8);
+                                    }
+                                    else
+                                    {
+                                        int const ceilZ  = getceilzofslope(pSprite->sectnum, pSprite->x, pSprite->y);
+                                        int const floorZ = getflorzofslope(pSprite->sectnum, pSprite->x, pSprite->y);
+                                        //debugprintf("ceil");
+                                        //initprintf(OSDTEXT_GREEN "ceil %d floor %d\n", ceilZ, floorZ);
+                                        //initprintf("ceil %d floor %d\n", ceilZ, floorZ);
+                                        //OSD_Printf("coord=%d ceil=%d floor=%d\n", pSprite->z, ceilZ, floorZ);
+
+                                        if (pSprite->z < ceilZ + ZOFFSET3)
+                                        {
+                                            //OSD_Printf("on ceiling\n");
+                                            //sprite[newSprite].pal = 8;
+
+                                            sprite[newSprite].cstat |= 8;
+                                            sprite[newSprite].z += (32 << 8);   //(40 << 8);
+                                        }
+                                        else if (pSprite->z > floorZ - ZOFFSET3)
+                                        {
+                                            //OSD_Printf("on floor\n");
+                                            //sprite[newSprite].pal = 1;
+
+                                            sprite[newSprite].z -= (8 << 8);
+                                        }
+                                    }
+                                    //sprite[newSprite].pal = 8;
+                                }
                                 else
                                 {
                                     sprite[newSprite].cstat |= 8;

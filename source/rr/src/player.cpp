@@ -680,8 +680,7 @@ growspark_rr:
                     {
                         int const spawnedSprite = A_Spawn(spriteNum, projecTile);
                         sprite[spawnedSprite].xvel = -12;
-                        sprite[spawnedSprite].ang
-                        = (getangle(hitwal->x - wall[hitwal->point2].x, hitwal->y - wall[hitwal->point2].y) + 512) & 2047;
+                        sprite[spawnedSprite].ang = (getangle(hitwal->x - wall[hitwal->point2].x, hitwal->y - wall[hitwal->point2].y) + 512) & 2047;
                         sprite[spawnedSprite].xyz = hitData.xyz;
                         sprite[spawnedSprite].cstat |= (krand2() & 4);
                         if (REALITY)
