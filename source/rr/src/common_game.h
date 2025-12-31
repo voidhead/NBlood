@@ -94,8 +94,9 @@ typedef enum basepal_ {
 #define OSDTEXT_GREEN     "^11"
 #define OSDTEXT_RED       "^21"
 #define OSDTEXT_YELLOW    "^23"
-
 #define OSDTEXT_BRIGHT    "^S0"
+//unmaker
+#define OSDTEXT_GREEN_RR  "^08"
 
 #define OSD_ERROR OSDTEXT_DARKRED OSDTEXT_BRIGHT
 

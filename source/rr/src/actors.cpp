@@ -625,7 +625,7 @@ void A_DoGuts(int spriteNum, int tileNum, int spawnCnt)
 
             DukePlayer_t *const pPlayer = g_player[pNum].ps;
 
-            if (((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1)) == false)
+            if ((pPlayer->gm & MODE_DEMO && g_demo_legacy == 1) == false)
             {
                 if ((krand2() >> 8) >= 127)
                     sprite[i].cstat |= 4;
@@ -3106,7 +3106,7 @@ ACTOR_STATIC void G_MoveWeapons(void)
                                             int playerNum = P_Get(pSprite->owner);
                                             DukePlayer_t *const pPlayer = g_player[P_Get(playerNum)].ps;
 
-                                            if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+                                            if ((pPlayer->gm & MODE_DEMO && g_demo_legacy == 1) == true)
                                                 sprite[newSprite].cstat = 16;
                                             else
                                                 sprite[newSprite].cstat = 16 | 256;
@@ -3210,15 +3210,19 @@ ACTOR_STATIC void G_MoveWeapons(void)
                                     int playerNum = P_Get(pSprite->owner);
                                     DukePlayer_t *const pPlayer = g_player[P_Get(playerNum)].ps;
 
-                                    if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+                                    if ((pPlayer->gm & MODE_DEMO && g_demo_legacy == 1) == true)
                                     {
                                         sprite[newSprite].cstat |= 8;
                                         sprite[newSprite].z += (48 << 8);
                                     }
                                     else
-                                    {
+                                    { 
+                                        for (bssize_t x = 0; x < 4; x++)
+                                            RANDOMSCRAP(pSprite, spriteNum);
+
                                         int const ceilZ  = getceilzofslope(pSprite->sectnum, pSprite->x, pSprite->y);
                                         int const floorZ = getflorzofslope(pSprite->sectnum, pSprite->x, pSprite->y);
+
                                         //debugprintf("ceil");
                                         //initprintf(OSDTEXT_GREEN "ceil %d floor %d\n", ceilZ, floorZ);
                                         //initprintf("ceil %d floor %d\n", ceilZ, floorZ);
@@ -6286,12 +6290,12 @@ DETONATEB:
                         if (!RR && !REALITY && pSprite->zvel == 0)
                             A_Spawn(spriteNum, EXPLOSION2BOT);
 
-                        //unmaker   // TODO
+                        //unmaker   // TODO ?
                         if (RR)
                         {
                             if (DYNAMICTILEMAP(pSprite->picnum) == HEAVYHBOMB__STATIC)
                             {
-                                if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+                                if ((pPlayer->gm & MODE_DEMO && g_demo_legacy == 1) == true)
                                 {
                                     for (bssize_t x = 0; x < 8; ++x)
                                         RANDOMSCRAP(pSprite, spriteNum);
@@ -7005,7 +7009,7 @@ jib_code:
                     else
                     {
                         /*
-                        //unmaker
+                        //unmaker   // TODO ?
                         if (RR)
                         {
                             int32_t playerDist;
@@ -7206,7 +7210,7 @@ jib_code:
                 {
                     int const playerNum = A_FindPlayer(pSprite, &playerDist);
                     DukePlayer_t *const pPlayer = g_player[P_Get(playerNum)].ps;
-                    if (((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1)) == false)
+                    if ((pPlayer->gm & MODE_DEMO && g_demo_legacy == 1) == false)
                     {
                         if (!G_HaveActor(sprite[spriteNum].picnum))
                             goto next_sprite;
@@ -10028,12 +10032,12 @@ static void A_DoLight(int spriteNum)
                 default: color = 240+(160<<8)+(80<<16); break;
                 }
 
-                for (jj=savedFires-1; jj>=0; jj--)
+                for (jj = savedFires-1; jj >= 0; jj--)
                     if (savedfires[jj][0]==pSprite->sectnum && savedfires[jj][1]==(pSprite->x>>3) &&
                         savedfires[jj][2]==(pSprite->y>>3) && savedfires[jj][3]==(pSprite->z>>7))
                         break;
 
-                if (jj==-1 && savedFires<32)
+                if (jj == -1 && savedFires < 32)
                 {
                     jj = savedFires;
                     G_AddGameLight(0, spriteNum, ((pSprite->yrepeat*tilesiz[pSprite->picnum].y)<<1), LIGHTRAD2(spriteNum, pSprite), color, PR_LIGHT_PRIO_HIGH_GAME);

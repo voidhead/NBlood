@@ -2362,7 +2362,7 @@ rrbloodpool_fallthrough:
                 if (((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1)) == false)
                 */
 
-                if (((g_player[myconnectindex].ps->gm & MODE_DEMO) && (g_demo_legacy == 1)) == false)
+                if ((g_player[myconnectindex].ps->gm & MODE_DEMO && g_demo_legacy == 1) == false)
                 {
                     if ((PN(spriteNum) == HULK || (PN(spriteNum) == HULKSTAYPUT)))
                     {
@@ -2871,7 +2871,7 @@ rrbloodpool_fallthrough:
                 else
                     pSprite->xrepeat = pSprite->yrepeat = 4;
 
-                //unmaker
+                //unmaker   // TODO ?
                 //if (RR && ((g_player[myconnectindex].ps->gm & MODE_DEMO) && (g_demo_legacy)) == false)
                 //    pSprite->clipdist = 2;  // 1;
 
@@ -5358,7 +5358,7 @@ default_case1:
                 else
                 {
                     //unmaker
-                    if ((g_player[myconnectindex].ps->gm & MODE_DEMO) && (g_demo_legacy == 1))
+                    if ((g_player[myconnectindex].ps->gm & MODE_DEMO && g_demo_legacy == 1) == true)
                         t->picnum = SHRINKSPARK + (((int32_t)totalclock >> 4) & 7);
                     else
                         t->picnum = SHRINKSPARK + (((int32_t)totalclock >> 2) & 7);

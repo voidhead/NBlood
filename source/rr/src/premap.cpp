@@ -1092,7 +1092,7 @@ void P_ResetWeapons(int playerNum)
     //unmaker
     if (RR)
     {
-        if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+        if ((pPlayer->gm & MODE_DEMO && g_demo_legacy) == true)
             pPlayer->ammo_amount[PISTOL_WEAPON] = min<int16_t>(pPlayer->max_ammo_amount[PISTOL_WEAPON], 48);
         else
             pPlayer->ammo_amount[PISTOL_WEAPON] = min<int16_t>(pPlayer->max_ammo_amount[PISTOL_WEAPON], aplWeaponClip[PISTOL_WEAPON][playerNum] * 10);

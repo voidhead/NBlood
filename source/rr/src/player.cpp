@@ -871,7 +871,7 @@ growspark_rr:
                             int jibSprite = A_Spawn(spawnedSprite, JIBS6);
 
                             /*
-                            //unmaker   // TODO
+                            //unmaker   // TODO ?
                             if (RR)
                             //if (((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1)) == false)
                             if (PN(spriteNum) == HULK || PN(spriteNum) == HULKSTAYPUT)
@@ -1916,7 +1916,7 @@ void P_SetWeaponGamevars(int playerNum, const DukePlayer_t * const pPlayer)
     //unmaker
     if (RR)
     {
-        if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+        if ((pPlayer->gm & MODE_DEMO && g_demo_legacy) == true)
             return;
 
         Gv_SetVar(g_weaponVarID, pPlayer->curr_weapon, pPlayer->i, playerNum);
@@ -6050,7 +6050,7 @@ static void P_ProcessWeapon(int playerNum)
                     int16_t clip = 0;
                     if (RR)
                     {
-                        if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+                        if ((pPlayer->gm & MODE_DEMO && g_demo_legacy) == true)
                             clip = 6;
                         else
                             clip = aplWeaponClip[PISTOL_WEAPON][playerNum];
@@ -6365,7 +6365,7 @@ static void P_ProcessWeapon(int playerNum)
             case FREEZE_WEAPON__STATIC:
                 (*weaponFrame)++;
                 //unmaker
-                if ((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1))
+                if ((pPlayer->gm & MODE_DEMO && g_demo_legacy) == true)
                 {
                     if ((*weaponFrame) >= 7 && (*weaponFrame) <= 11)
                         A_Shoot(pPlayer->i, FIRELASER);

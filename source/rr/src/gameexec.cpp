@@ -2899,7 +2899,7 @@ GAMEEXEC_STATIC void VM_Execute(native_t loop)
                         }
                     }
 
-                    Bsprintf(tempbuf, "CONLOGVAR: L=%d %s ", VM_DECODE_LINE_NUMBER(g_tw), aGameVars[lVarID].szLabel);
+                    Bsprintf(tempbuf, "CONLOGVAR: L=%d %s", VM_DECODE_LINE_NUMBER(g_tw), aGameVars[lVarID].szLabel);
 
                     if (aGameVars[lVarID].flags & GAMEVAR_READONLY)
                     {
@@ -2908,11 +2908,11 @@ GAMEEXEC_STATIC void VM_Execute(native_t loop)
                     }
                     if (aGameVars[lVarID].flags & GAMEVAR_PERPLAYER)
                     {
-                        Bsprintf(szBuf, " (Per Player. Player=%d)", vm.playerNum);
+                        Bsprintf(szBuf, " (Per Player; Player=%d)", vm.playerNum);
                     }
                     else if (aGameVars[lVarID].flags & GAMEVAR_PERACTOR)
                     {
-                        Bsprintf(szBuf, " (Per Actor. Actor=%d)", vm.spriteNum);
+                        Bsprintf(szBuf, " (Per Actor; Actor=%d)", vm.spriteNum);
                     }
                     else
                     {
@@ -2924,7 +2924,7 @@ GAMEEXEC_STATIC void VM_Execute(native_t loop)
                     Bstrcat(tempbuf, szBuf);
 
                     //unmaker
-                    OSD_Printf(OSDTEXT_GREEN "%s", tempbuf);
+                    OSD_Printf(OSDTEXT_GREEN_RR OSDTEXT_BRIGHT "%s", tempbuf);
                     //initprintf(OSDTEXT_GREEN "%s", tempbuf);
 
                     insptr++;

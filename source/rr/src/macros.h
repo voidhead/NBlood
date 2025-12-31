@@ -61,7 +61,7 @@ static inline void RANDOMSCRAP(spritetype *s, int i)
     //A_InsertSprite(s->sectnum, s->x+(r7&255)-128, s->y+(r6&255)-128, s->z-ZOFFSET3-(r5&8191), SCRAP6 + (r4 & 15), -8, RR ? 16 : 48, RR ? 16 : 48, r3&2047, (r2&63)+64, -512-(r1&2047), i, 5);
 }
 
-//unmaker   //TODO
+//unmaker   //TODO ?
 /*
 static inline void RANDOMSCRAP2(spritetype* s, int i)
 {

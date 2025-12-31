@@ -3509,7 +3509,7 @@ default_case:
 
                         DukePlayer_t *const pPlayer = g_player[pNum].ps;
                         
-                        if (((pPlayer->gm & MODE_DEMO) && (g_demo_legacy == 1)) == false)
+                        if ((pPlayer->gm & MODE_DEMO && g_demo_legacy == 1) == false)
                         {
                             if ((PN(spriteNum) == HULK || (PN(spriteNum) == HULKSTAYPUT)))
                             {
