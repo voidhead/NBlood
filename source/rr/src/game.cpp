@@ -2366,7 +2366,7 @@ rrbloodpool_fallthrough:
                 {
                     if ((PN(spriteNum) == HULK || (PN(spriteNum) == HULKSTAYPUT)))
                     {
-                        if ((krand2() >> 8) >= (255 - GREEN_BLOOD_FREQUENCY))
+                        if ((krand2() >> 8) >= (255 - RR_COLORED_BLOOD_FREQUENCY))
                             pSprite->pal = 8;
                         else
                         {
@@ -5028,7 +5028,7 @@ void G_DoSpriteAnimations(int32_t ourx, int32_t oury, int32_t ourz, int32_t oura
         const int32_t i = t->owner;
         spritetype *const s = &sprite[i];
 
-        if (t->picnum < GREENSLIME || t->picnum > GREENSLIME+7)
+        if (t->picnum < GREENSLIME || t->picnum > GREENSLIME + 7)
             switch (DYNAMICTILEMAP(t->picnum))
             {
             case PIG__STATICRR:
@@ -5113,7 +5113,7 @@ void G_DoSpriteAnimations(int32_t ourx, int32_t oury, int32_t ourz, int32_t oura
             default:
 default_case1:
                 // NOTE: wall-aligned sprites will never take on ceiling/floor shade...
-                if ((t->cstat&16) || (A_CheckEnemySprite(t) &&
+                if ((t->cstat & 16) || (A_CheckEnemySprite(t) &&
                     (unsigned)t->owner < MAXSPRITES && sprite[t->owner].extra > 0) || t->statnum == STAT_PLAYER)
                 {
                     if (RR && g_shadedSector[s->sectnum] == 1)
@@ -5126,11 +5126,11 @@ default_case1:
             }
 
         // ... since this is not reached:
-        if (t->cstat&CSTAT_SPRITE_NOSHADE)
+        if (t->cstat & CSTAT_SPRITE_NOSHADE)
             l = sprite[t->owner].shade;
         else
         {
-            if (sector[t->sectnum].ceilingstat&1)
+            if (sector[t->sectnum].ceilingstat & 1)
             {
                 if (RR)
                     l = s->shade;
@@ -6005,9 +6005,11 @@ skip:
                     continue;
 
                 if (ud.shadows && spritesortcnt < (maxspritesonscreen-2)
+
 #ifdef POLYMER
                     && !(videoGetRenderMode() == REND_POLYMER && pr_lighting != 0)
 #endif
+
                     )
                 {
                     if (DEER && klabs(sector[sect].ceilingheinum - sector[sect].floorheinum) > 576) continue;
@@ -6032,7 +6034,6 @@ skip:
                         tsprShadow->cstat  |= 2;
                         tsprShadow->z       = shadowZ;
                         tsprShadow->pal     = ud.shadow_pal;
-
 
 #ifdef USE_OPENGL
                         if (videoGetRenderMode() >= REND_POLYMOST)
@@ -6065,247 +6066,311 @@ skip:
             if (pSprite->picnum == 806)
                 t->picnum = 1023;
         }
-        else switch (DYNAMICTILEMAP(pSprite->picnum))
-        {
-        case LASERLINE__STATIC:
-            if (RR) break;
-            if (sector[t->sectnum].lotag == ST_2_UNDERWATER) t->pal = 8;
-            t->z = sprite[pSprite->owner].z-(3<<8);
-            if (g_tripbombLaserMode == 2 && g_player[screenpeek].ps->heat_on == 0)
-                t->yrepeat = 0;
-            fallthrough__;
-        case EXPLOSION2BOT__STATIC:
-            if (REALITY && pSprite->picnum == EXPLOSION2BOT)
-                break;
-            fallthrough__;
-        case GROWSPARK__STATIC:
-        case SHRINKEREXPLOSION__STATIC:
-        case FLOORFLAME__STATIC:
-            if (RR) break;
-            fallthrough__;
-        case FREEZEBLAST__STATIC:
-            if (REALITY && pSprite->picnum == FREEZEBLAST)
-                break;
-            fallthrough__;
-        case ATOMICHEALTH__STATIC:
-        case FIRELASER__STATIC:
-        case SHRINKSPARK__STATIC:
-        case CHAINGUN__STATIC:
-        case RPG__STATIC:
-        case EXPLOSION2__STATIC:
-        case EXPLOSION3__STATICRR:
-        case OWHIP__STATICRR:
-        case UWHIP__STATICRR:
-        case RPG2__STATICRR:
-        case RRTILE1790__STATICRR:
-rrcoolexplosion1:
-            if (RR && !RRRA && (pSprite->picnum == RPG2 || pSprite->picnum == RRTILE1790)) break;
-            if (t->picnum == EXPLOSION2)
+        else
+            switch (DYNAMICTILEMAP(pSprite->picnum))
             {
-                g_player[screenpeek].ps->visibility = -127;
-                //g_restorePalette = 1;   // JBF 20040101: why?
-                if (RR)
-                    t->pal = 0;
-            }
-            else if (RR && t->picnum == FIRELASER)
-                t->picnum = FIRELASER + (((int32_t)totalclock >> 2) & 5);
-            t->shade = -127;
-            t->clipdist |= TSPR_FLAGS_DRAW_LAST | TSPR_FLAGS_NO_SHADOW;
-            break;
-        case UFOBEAM__STATICRR:
-        case RRTILE3586__STATICRR:
-        case RRTILE3587__STATICRR:
-            t->cstat |= 32768;
-            pSprite->cstat |= 32768;
-            break;
-        case DESTRUCTO__STATICRR:
-            t->cstat |= 32768;
-            break;
-        case FIRE__STATIC:
-        case FIRE2__STATIC:
-            if (RR && pSprite->picnum == FIRE2) break;
-            t->cstat |= 128;
-            fallthrough__;
-        case BURNING__STATIC:
-        case BURNING2__STATIC:
-            if (RR && pSprite->picnum == BURNING2) break;
-            if (sprite[pSprite->owner].picnum != TREE1 && sprite[pSprite->owner].picnum != TREE2)
-                t->z = sector[t->sectnum].floorz;
-            t->shade = -127;
-            fallthrough__;
-        case SMALLSMOKE__STATIC:
-            if (RR) break;
-            t->clipdist |= TSPR_FLAGS_DRAW_LAST | TSPR_FLAGS_NO_SHADOW;
-            break;
-        case COOLEXPLOSION1__STATIC:
-            if (RR) goto rrcoolexplosion1;
-            t->shade = -127;
-            t->clipdist |= TSPR_FLAGS_DRAW_LAST | TSPR_FLAGS_NO_SHADOW;
-            t->picnum += (pSprite->shade>>1);
-            break;
-        case WALLLIGHT3__STATIC:
-        case WALLLIGHT1__STATIC:
-            if (!RR) break;
-            fallthrough__;
-        case RRTILE3668__STATICRR:
-        case RRTILE3795__STATICRR:
-        case RRTILE5035__STATICRR:
-        case RRTILE7505__STATICRR:
-        case RRTILE7506__STATICRR:
-        case RRTILE7533__STATICRR:
-        case RRTILE8216__STATICRR:
-        case RRTILE8218__STATICRR:
-        case RRTILE8220__STATICRR:
-            if (!RRRA) break;
-            fallthrough__;
-        case RRTILE1878__STATICRR:
-        case RRTILE1952__STATICRR:
-        case RRTILE1953__STATICRR:
-        case RRTILE1990__STATICRR:
-        case RRTILE2050__STATICRR:
-        case RRTILE2056__STATICRR:
-        case RRTILE2072__STATICRR:
-        case RRTILE2075__STATICRR:
-        case RRTILE2083__STATICRR:
-        case RRTILE2097__STATICRR:
-        case RRTILE2156__STATICRR:
-        case RRTILE2157__STATICRR:
-        case RRTILE2158__STATICRR:
-        case RRTILE2159__STATICRR:
-        case RRTILE2160__STATICRR:
-        case RRTILE2161__STATICRR:
-        case RRTILE2175__STATICRR:
-        case RRTILE2176__STATICRR:
-        case RRTILE2357__STATICRR:
-        case RRTILE2564__STATICRR:
-        case RRTILE2573__STATICRR:
-        case RRTILE2574__STATICRR:
-        case RRTILE2583__STATICRR:
-        case RRTILE2604__STATICRR:
-        case RRTILE2689__STATICRR:
-        case RRTILE2893__STATICRR:
-        case RRTILE2894__STATICRR:
-        case RRTILE2915__STATICRR:
-        case RRTILE2945__STATICRR:
-        case RRTILE2946__STATICRR:
-        case RRTILE2947__STATICRR:
-        case RRTILE2948__STATICRR:
-        case RRTILE2949__STATICRR:
-        case RRTILE2977__STATICRR:
-        case RRTILE2978__STATICRR:
-        case RRTILE3116__STATICRR:
-        case RRTILE3171__STATICRR:
-        case RRTILE3216__STATICRR:
-        case RRTILE3720__STATICRR:
-            t->shade = -127;
-            break;
-        case CHEER__STATICRR:
-            if (!RRRA) break;
-            if (t->picnum >= CHEER + 102 && t->picnum <= CHEER + 151)
-                t->shade = -127;
-            break;
-        case MINION__STATICRR:
-            if (!RRRA) break;
-            if (t->pal == 19)
-                t->shade = -127;
-            break;
-        case BIKER__STATICRR:
-            if (!RRRA) break;
-            if (t->picnum >= BIKER + 54 && t->picnum <= BIKER + 58)
-                t->shade = -127;
-            else if (t->picnum >= BIKER + 84 && t->picnum <= BIKER + 88)
-                t->shade = -127;
-            break;
-        case BILLYRAY__STATICRR:
-        case BILLYRAYSTAYPUT__STATICRR:
-            if (!RRRA) break;
-            if (t->picnum >= BILLYRAY + 5 && t->picnum <= BILLYRAY + 9)
-                t->shade = -127;
-            break;
-        case RRTILE2034__STATICRR:
-            t->picnum = RRTILE2034 + ((int32_t) totalclock & 1);
-            break;
-        case RRTILE2944__STATICRR:
-            t->shade = -127;
-            t->picnum = RRTILE2944 + (((int32_t) totalclock >> 2) & 4);
-            break;
-        case PLAYERONWATER__STATIC:
+                case LASERLINE__STATIC:
+                    if (RR)
+                        break;
+                    if (sector[t->sectnum].lotag == ST_2_UNDERWATER)
+                        t->pal = 8;
+                    t->z = sprite[pSprite->owner].z - (3 << 8);
+                    if (g_tripbombLaserMode == 2 && g_player[screenpeek].ps->heat_on == 0)
+                        t->yrepeat = 0;
+                    fallthrough__;
+                case EXPLOSION2BOT__STATIC:
+                    if (REALITY && pSprite->picnum == EXPLOSION2BOT)
+                        break;
+                    fallthrough__;
+                case GROWSPARK__STATIC:
+                case SHRINKEREXPLOSION__STATIC:
+                case FLOORFLAME__STATIC:
+                    if (RR)
+                        break;
+                    fallthrough__;
+                case FREEZEBLAST__STATIC:
+                    if (REALITY && pSprite->picnum == FREEZEBLAST)
+                        break;
+                    fallthrough__;
+                case ATOMICHEALTH__STATIC:
+                case FIRELASER__STATIC:
+                case SHRINKSPARK__STATIC:
+                case CHAINGUN__STATIC:
+                case RPG__STATIC:
+                case EXPLOSION2__STATIC:
+                case EXPLOSION3__STATICRR:
+                case OWHIP__STATICRR:
+                case UWHIP__STATICRR:
+                case RPG2__STATICRR:
+                    //unmaker
+                    if (RR && !RRRA)
+                        break;
+                    fallthrough__;
+                case RRTILE1790__STATICRR:
+                    //unmaker
+                    if (RR && !RRRA)
+                        break;
+                    fallthrough__;
+                rrcoolexplosion1:
+                    //unmaker
+                    //if (RR && !RRRA && (pSprite->picnum == RPG2 || pSprite->picnum == RRTILE1790))
+                    //    break;
+
+                    if (t->picnum == EXPLOSION2)
+                    {
+                        g_player[screenpeek].ps->visibility = -127;
+                        //g_restorePalette = 1;   // JBF 20040101: why?
+                        if (RR)
+                            t->pal = 0;
+                    }
+                    else if (RR && t->picnum == FIRELASER)
+                        t->picnum = FIRELASER + (((int32_t)totalclock >> 2) & 5);
+
+                    t->shade = -127;
+                    t->clipdist |= TSPR_FLAGS_DRAW_LAST | TSPR_FLAGS_NO_SHADOW;
+                    break;
+                case UFOBEAM__STATICRR:
+                case RRTILE3586__STATICRR:
+                case RRTILE3587__STATICRR:
+                    t->cstat |= 32768;
+                    pSprite->cstat |= 32768;
+                    break;
+                case DESTRUCTO__STATICRR: t->cstat |= 32768; break;
+                case FIRE__STATIC:
+                case FIRE2__STATIC:
+                    //unmaker
+                    if (RR && pSprite->picnum == FIRE2)
+                        break;
+                    t->cstat |= 128;
+                    fallthrough__;
+                case BURNING__STATIC:
+                case BURNING2__STATIC:
+                    //unmaker
+                    //if (RR && pSprite->picnum == BURNING2)
+                    //    break;
+
+                    if (sprite[pSprite->owner].picnum != TREE1 && sprite[pSprite->owner].picnum != TREE2)
+                        t->z = sector[t->sectnum].floorz;
+
+                    t->shade = -127;
+                    fallthrough__;
+                case SMALLSMOKE__STATIC:
+                    if (RR)
+                        break;
+
+                    t->clipdist |= TSPR_FLAGS_DRAW_LAST | TSPR_FLAGS_NO_SHADOW;
+                    break;
+                case COOLEXPLOSION1__STATIC:
+                    if (RR)
+                        goto rrcoolexplosion1
+                        ;
+                    t->shade = -127;
+                    t->clipdist |= TSPR_FLAGS_DRAW_LAST | TSPR_FLAGS_NO_SHADOW;
+                    t->picnum += (pSprite->shade >> 1);
+                    break;
+                case WALLLIGHT3__STATIC:
+                case WALLLIGHT1__STATIC:
+                    if (!RR)
+                        break;
+                    fallthrough__;
+                case RRTILE3668__STATICRR:
+                case RRTILE3795__STATICRR:
+                case RRTILE5035__STATICRR:
+                case RRTILE7505__STATICRR:
+                case RRTILE7506__STATICRR:
+                case RRTILE7533__STATICRR:
+                case RRTILE8216__STATICRR:
+                case RRTILE8218__STATICRR:
+                case RRTILE8220__STATICRR:
+                    if (!RRRA)
+                        break;
+                    fallthrough__;
+                case RRTILE1878__STATICRR:
+                case RRTILE1952__STATICRR:
+                case RRTILE1953__STATICRR:
+                case RRTILE1990__STATICRR:
+                case RRTILE2050__STATICRR:
+                case RRTILE2056__STATICRR:
+                case RRTILE2072__STATICRR:
+                case RRTILE2075__STATICRR:
+                case RRTILE2083__STATICRR:
+                case RRTILE2097__STATICRR:
+                case RRTILE2156__STATICRR:
+                case RRTILE2157__STATICRR:
+                case RRTILE2158__STATICRR:
+                case RRTILE2159__STATICRR:
+                case RRTILE2160__STATICRR:
+                case RRTILE2161__STATICRR:
+                case RRTILE2175__STATICRR:
+                case RRTILE2176__STATICRR:
+                case RRTILE2357__STATICRR:
+                case RRTILE2564__STATICRR:
+                case RRTILE2573__STATICRR:
+                case RRTILE2574__STATICRR:
+                case RRTILE2583__STATICRR:
+                case RRTILE2604__STATICRR:
+                case RRTILE2689__STATICRR:
+                case RRTILE2893__STATICRR:
+                case RRTILE2894__STATICRR:
+                case RRTILE2915__STATICRR:
+                case RRTILE2945__STATICRR:
+                case RRTILE2946__STATICRR:
+                case RRTILE2947__STATICRR:
+                case RRTILE2948__STATICRR:
+                case RRTILE2949__STATICRR:
+                case RRTILE2977__STATICRR:
+                case RRTILE2978__STATICRR:
+                case RRTILE3116__STATICRR:
+                case RRTILE3171__STATICRR:
+                case RRTILE3216__STATICRR:
+                case RRTILE3720__STATICRR: t->shade = -127; break;
+                case CHEER__STATICRR:
+                    if (!RRRA)
+                        break;
+
+                    if (t->picnum >= CHEER + 102 && t->picnum <= CHEER + 151)
+                        t->shade = -127;
+                    break;
+                case MINION__STATICRR:
+                    if (!RRRA)
+                        break;
+
+                    if (t->pal == 19)
+                        t->shade = -127;
+                    break;
+                case BIKER__STATICRR:
+                    if (!RRRA)
+                        break;
+
+                    if (t->picnum >= BIKER + 54 && t->picnum <= BIKER + 58)
+                        t->shade = -127;
+                    else if (t->picnum >= BIKER + 84 && t->picnum <= BIKER + 88)
+                        t->shade = -127;
+                    break;
+                case BILLYRAY__STATICRR:
+                case BILLYRAYSTAYPUT__STATICRR:
+                    //unmaker
+                    /*
+                    if (!RRRA)
+                        break;
+                    if (t->picnum >= BILLYRAY + 5 && t->picnum <= BILLYRAY + 9)
+                        t->shade = -127;
+                    */
+
+                    if (t->picnum >= BILLYRAY + 5 && t->picnum <= (BILLYRAY + 5) + 4)
+                        t->shade = -96;
+                    break;
+                // unmaker
+                case COOT__STATICRR:
+                case COOTSTAYPUT__STATICRR:
+                    if (t->picnum >= COOTSHOOT && t->picnum <= COOTSHOOT + 4)
+                        t->shade = -96;
+                    break;
+                case HULK__STATICRR:
+                case HULKSTAYPUT__STATICRR:
+                    if (t->picnum >= HULK + 2 && t->picnum <= (HULK + 2) + 4)
+                        t->shade = -64;
+                    break;
+                case LTH__STATICRR:
+                    if ((t->picnum >= LTH && t->picnum <= LTH + 4) ||
+                        (t->picnum >= LTH + 5 * 3 && t->picnum <= (LTH + 5 * 3) + 4) ||
+                        (t->picnum >= LTH + 5 * 4 && t->picnum <= (LTH + 5 * 4) + 4) ||
+                        (t->picnum >= LTH + 5 * 6 && t->picnum <= (LTH + 5 * 6) + 4))
+                            t->shade = -96;
+                    else if ((t->picnum >= LTH + 48 && t->picnum <= LTH + 48 + 4) ||
+                        (t->picnum >= LTH + 48 + 5 * 1 && t->picnum <= (LTH + 48 + 5 * 1) + 4) ||
+                        (t->picnum >= LTH + 48 + 5 * 3 && t->picnum <= (LTH + 48 + 5 * 3) + 4) ||
+                        (t->picnum >= LTH + 48 + 5 * 4 && t->picnum <= (LTH + 48 + 5 * 4) + 4))
+                            t->shade = -96;
+                    break;
+                case VIXEN__STATICRR:
+                    if ((t->picnum >= VIXENTEAT + 5 && t->picnum <= (VIXENTEAT + 5) + 4) ||
+                        (t->picnum >= VIXENTEAT + 5 * 3 && t->picnum <= (VIXENTEAT + 5 * 3) + 4))
+                            t->shade = -96;
+                    break;
+                case RRTILE2034__STATICRR:
+                    t->picnum = RRTILE2034 + ((int32_t) totalclock & 1);
+                    break;
+                case RRTILE2944__STATICRR:
+                    t->shade = -127;
+                    t->picnum = RRTILE2944 + (((int32_t) totalclock >> 2) & 4);
+                    break;
+                case PLAYERONWATER__STATIC:
 #ifdef USE_OPENGL
-            if (videoGetRenderMode() >= REND_POLYMOST && usemodels && md_tilehasmodel(pSprite->picnum,pSprite->pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
-            {
-                frameOffset = 0;
-                t->cstat &= ~4;
-            }
-            else
+                    if (videoGetRenderMode() >= REND_POLYMOST && usemodels && md_tilehasmodel(pSprite->picnum,pSprite->pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+                    {
+                        frameOffset = 0;
+                        t->cstat &= ~4;
+                    }
+                    else
 #endif
-                frameOffset = getofs_viewtype_mirrored<5>(t->cstat, t->ang - oura);
+                    frameOffset = getofs_viewtype_mirrored<5>(t->cstat, t->ang - oura);
 
-            t->picnum = pSprite->picnum+frameOffset+((T1(i)<4)*5);
-            t->shade = sprite[pSprite->owner].shade;
-
-            break;
-
-        case MUD__STATICRR:
-            t->picnum = MUD+T2(i);
-            break;
-        case WATERSPLASH2__STATIC:
-            // WATERSPLASH_T2
-            t->picnum = WATERSPLASH2+T2(i);
-            break;
-        case SHELL__STATIC:
-            t->picnum = pSprite->picnum+(T1(i) & 1);
-            fallthrough__;
-        case SHOTGUNSHELL__STATIC:
-            t->cstat |= 12;
-            if (T1(i) > 2) t->cstat &= ~12;
-            else if (T1(i) > 1) t->cstat &= ~4;
-            break;
-        case FRAMEEFFECT1__STATIC:
-            if (pSprite->owner >= 0 && sprite[pSprite->owner].statnum < MAXSTATUS)
-            {
-                if (sprite[pSprite->owner].picnum == APLAYER)
-                    if (ud.camerasprite == -1)
-                        if (screenpeek == P_Get(pSprite->owner) && display_mirror == 0)
-                        {
-                            t->owner = -1;
-                            break;
-                        }
-                if ((sprite[pSprite->owner].cstat&32768) == 0)
-                {
-                    if (!actor[pSprite->owner].dispicnum)
-                        t->picnum = actor[i].t_data[1];
-                    else t->picnum = actor[pSprite->owner].dispicnum;
-
-                    if (RR && sprite[pSprite->owner].picnum == APLAYER)
-                        t->picnum = SMALLSMOKE;
-
-                    if (!G_MaybeTakeOnFloorPal(t, sect))
-                        t->pal = sprite[pSprite->owner].pal;
-
+                    t->picnum = pSprite->picnum+frameOffset+((T1(i)<4)*5);
                     t->shade = sprite[pSprite->owner].shade;
-                    t->ang = sprite[pSprite->owner].ang;
-                    t->cstat = 2|sprite[pSprite->owner].cstat;
-                }
-            }
-            break;
 
-        case CAMERA1__STATIC:
-        case RAT__STATIC:
+                    break;
+                case MUD__STATICRR:
+                    t->picnum = MUD+T2(i);
+                    break;
+                case WATERSPLASH2__STATIC:
+                    // WATERSPLASH_T2
+                    t->picnum = WATERSPLASH2+T2(i);
+                    break;
+                case SHELL__STATIC:
+                    t->picnum = pSprite->picnum+(T1(i) & 1);
+                    fallthrough__;
+                case SHOTGUNSHELL__STATIC:
+                    t->cstat |= 12;
+                    if (T1(i) > 2) t->cstat &= ~12;
+                    else if (T1(i) > 1) t->cstat &= ~4;
+                    break;
+                case FRAMEEFFECT1__STATIC:
+                    if (pSprite->owner >= 0 && sprite[pSprite->owner].statnum < MAXSTATUS)
+                    {
+                        if (sprite[pSprite->owner].picnum == APLAYER)
+                            if (ud.camerasprite == -1)
+                                if (screenpeek == P_Get(pSprite->owner) && display_mirror == 0)
+                                {
+                                    t->owner = -1;
+                                    break;
+                                }
+                        if ((sprite[pSprite->owner].cstat&32768) == 0)
+                        {
+                            if (!actor[pSprite->owner].dispicnum)
+                                t->picnum = actor[i].t_data[1];
+                            else t->picnum = actor[pSprite->owner].dispicnum;
+
+                            if (RR && sprite[pSprite->owner].picnum == APLAYER)
+                                t->picnum = SMALLSMOKE;
+
+                            if (!G_MaybeTakeOnFloorPal(t, sect))
+                                t->pal = sprite[pSprite->owner].pal;
+
+                            t->shade = sprite[pSprite->owner].shade;
+                            t->ang = sprite[pSprite->owner].ang;
+                            t->cstat = 2|sprite[pSprite->owner].cstat;
+                        }
+                    }
+                    break;
+
+                case CAMERA1__STATIC:
+                case RAT__STATIC:
 #ifdef USE_OPENGL
-            if (videoGetRenderMode() >= REND_POLYMOST && usemodels && md_tilehasmodel(pSprite->picnum,pSprite->pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
-            {
-                t->cstat &= ~4;
-                break;
-            }
+                    if (videoGetRenderMode() >= REND_POLYMOST && usemodels && md_tilehasmodel(pSprite->picnum,pSprite->pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+                    {
+                        t->cstat &= ~4;
+                        break;
+                    }
 #endif
-            frameOffset = getofs_viewtype_mirrored<5>(t->cstat, t->ang - oura);
-            t->picnum = pSprite->picnum+frameOffset;
-            break;
-        case DN64TILE3841__STATIC:
-            t->shade = -127;
-            t->clipdist |= TSPR_FLAGS_DRAW_LAST | TSPR_FLAGS_NO_SHADOW;
-            break;
-        }
+                    frameOffset = getofs_viewtype_mirrored<5>(t->cstat, t->ang - oura);
+                    t->picnum = pSprite->picnum+frameOffset;
+                    break;
+                case DN64TILE3841__STATIC:
+                    t->shade = -127;
+                    t->clipdist |= TSPR_FLAGS_DRAW_LAST | TSPR_FLAGS_NO_SHADOW;
+                    break;
+            }
 
         actor[i].dispicnum = t->picnum;
 #if 0

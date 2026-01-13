@@ -771,6 +771,7 @@ growspark_rr:
                 if (projecTile == CHAINGUN)
                     projecTile = DN64TILE2597;
             }
+
             if (pSprite->extra >= 0)
                 pSprite->shade = -96;
 

@@ -622,13 +622,14 @@ void A_DoGuts(int spriteNum, int tileNum, int spawnCnt)
             int pNum = 0;
             for (bssize_t TRAVERSE_CONNECT(playerNum))
                 pNum = playerNum;
-
             DukePlayer_t *const pPlayer = g_player[pNum].ps;
 
             if ((pPlayer->gm & MODE_DEMO && g_demo_legacy == 1) == false)
             {
                 if ((krand2() >> 8) >= 127)
                     sprite[i].cstat |= 4;
+
+                if (PN(i) != JIBS6)
                 if ((krand2() >> 8) >= 127)
                     sprite[i].cstat |= 8;
 
@@ -654,28 +655,59 @@ void A_DoGuts(int spriteNum, int tileNum, int spawnCnt)
                     sprite[i].xrepeat = sprite[i].yrepeat = 10;
                 else if (PN(i) == JIBS3)
                     sprite[i].xrepeat = sprite[i].yrepeat = 12;
+                else if (PN(i) == JIBS6)
+                {
+                    if (pSprite->picnum == HULK || pSprite->picnum == HULKSTAYPUT)
+                    {
+                        if ((krand2() >> 8) >= (255 - RR_COLORED_BLOOD_FREQUENCY))
+                            sprite[i].pal = 8;
+                        else
+                            sprite[i].pal = 0;
+                    }
+                    else if (pSprite->picnum == MINION || pSprite->picnum == MINIONSTAYPUT || pSprite->picnum == MINIONBOAT)
+                    {
+                        if (RRRA && (pSprite->pal == 8 || pSprite->pal == 19))
+                        {
+                            pal = pSprite->pal;
+                            sprite[i].pal = pal;
+                        }
+                        else
+                        {
+                            if ((krand2() >> 8) >= (255 - RR_COLORED_BLOOD_FREQUENCY))
+                                sprite[i].pal = 5;
+                            else
+                                sprite[i].pal = 0;                        
+                        }
+                    }
+                }
+                else
+                    sprite[i].pal = pal;
             }
+            else
+                sprite[i].pal = pal;
         }
-
-        sprite[i].pal = pal;
+        else
+            sprite[i].pal = pal;
     }
 }
 
 void A_DoGutsDir(int spriteNum, int tileNum, int spawnCnt)
 {
-    uspritetype const * const s = (uspritetype *)&sprite[spriteNum];
+    uspritetype const * const pSprite = (uspritetype *)&sprite[spriteNum];
+    uint8_t pal = 0;
+
     vec2_t repeat = { 32, 32 };
 
-    if (A_CheckEnemySprite(s) && s->xrepeat < 16)
+    if (A_CheckEnemySprite(pSprite) && pSprite->xrepeat < 16)
         repeat.x = repeat.y = 8;
 
-    int gutZ = s->z-ZOFFSET3;
-    int floorZ = getflorzofslope(s->sectnum,s->x,s->y);
+    int gutZ = pSprite->z-ZOFFSET3;
+    int floorZ = getflorzofslope(pSprite->sectnum,pSprite->x,pSprite->y);
 
     if (gutZ > (floorZ-ZOFFSET3))
         gutZ = floorZ-ZOFFSET3;
 
-    if (!RR && s->picnum == COMMANDER)
+    if (!RR && pSprite->picnum == COMMANDER)
         gutZ -= (24<<8);
 
     for (bssize_t j=spawnCnt; j>0; j--)
@@ -684,8 +716,53 @@ void A_DoGutsDir(int spriteNum, int tileNum, int spawnCnt)
         int32_t r1 = krand2(), r2 = krand2();
         if (REALITY)
             swap(&r1, &r2);
-        A_InsertSprite(s->sectnum, s->x, s->y, gutZ, tileNum, -32, repeat.x, repeat.y, ang,
+
+        int const i = A_InsertSprite(pSprite->sectnum, pSprite->x, pSprite->y, gutZ, tileNum, -32, repeat.x, repeat.y, ang,
                                      256 + (r2 & 127), -512 - (r1 & 2047), spriteNum, 5);
+        //unmaker
+        if (RR)
+        {
+            int pNum = 0;
+            for (bssize_t TRAVERSE_CONNECT(playerNum))
+                pNum = playerNum;
+            DukePlayer_t *const pPlayer = g_player[pNum].ps;
+
+            if ((pPlayer->gm & MODE_DEMO && g_demo_legacy == 1) == false)
+            {
+                if ((krand2() >> 8) >= 127)
+                    sprite[i].cstat |= 4;
+
+                if (PN(i) != JIBS6)
+                if ((krand2() >> 8) >= 127)
+                    sprite[i].cstat |= 8;
+
+                if (PN(i) == JIBS6)
+                {
+                    if (pSprite->picnum == HULK || pSprite->picnum == HULKSTAYPUT)
+                    {
+                        if ((krand2() >> 8) >= (255 - RR_COLORED_BLOOD_FREQUENCY))
+                            sprite[i].pal = 8;
+                        else
+                            sprite[i].pal = 0;
+                    }
+                    else if (pSprite->picnum == MINION || pSprite->picnum == MINIONSTAYPUT || pSprite->picnum == MINIONBOAT)
+                    {
+                        if (RRRA && (pSprite->pal == 8 || pSprite->pal == 19))
+                        {
+                            pal = pSprite->pal;
+                            sprite[i].pal = pal;
+                        }
+                        else
+                        {
+                            if ((krand2() >> 8) >= (255 - RR_COLORED_BLOOD_FREQUENCY))
+                                sprite[i].pal = 5;
+                            else
+                                sprite[i].pal = 0;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

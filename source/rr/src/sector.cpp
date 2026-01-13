@@ -1968,32 +1968,32 @@ void A_DamageWall(int spriteNum, int wallNum, const vec3_t *vPos, int weaponNum)
             G_BreakWall(DN64TILE3727, spriteNum, wallNum);
             break;
         case RRTILE3643__STATICRR:
+        {
+            int jj = headspritesect[wall[pWall->nextwall].nextsector];
+            while (jj != -1)
             {
-                int jj = headspritesect[wall[pWall->nextwall].nextsector];
-                while (jj != -1)
+                int const nextjj = nextspritesect[jj];
+                spritetype *pSprite = &sprite[jj];
+                if (pSprite->lotag == 6)
                 {
-                    int const nextjj = nextspritesect[jj];
-                    spritetype *pSprite = &sprite[jj];
-                    if (pSprite->lotag == 6)
+                    for (bssize_t j = 0; j < 16; j++) RANDOMSCRAP(pSprite,jj);
+                    g_spriteExtra[jj]++;
+                    if (g_spriteExtra[jj] == 25)
                     {
-                        for (bssize_t j = 0; j < 16; j++) RANDOMSCRAP(pSprite,jj);
-                        g_spriteExtra[jj]++;
-                        if (g_spriteExtra[jj] == 25)
-                        {
-                            int const startwall = sector[pSprite->sectnum].wallptr;
-                            int const endwall = startwall+sector[pSprite->sectnum].wallnum;
-                            for(bssize_t i=startwall;i<endwall;i++)
-                                sector[wall[i].nextsector].lotag = 0;
-                            sector[pSprite->sectnum].lotag = 0;
-                            S_StopSound(sprite[jj].lotag);
-                            A_PlaySound(400,jj);
-                            A_DeleteSprite(jj);
-                        }
+                        int const startwall = sector[pSprite->sectnum].wallptr;
+                        int const endwall = startwall+sector[pSprite->sectnum].wallnum;
+                        for(bssize_t i=startwall;i<endwall;i++)
+                            sector[wall[i].nextsector].lotag = 0;
+                        sector[pSprite->sectnum].lotag = 0;
+                        S_StopSound(sprite[jj].lotag);
+                        A_PlaySound(400,jj);
+                        A_DeleteSprite(jj);
                     }
-                    jj = nextjj;
                 }
-                return;
+                jj = nextjj;
             }
+            return;
+        }
         case RRTILE7555__STATICRR:
             if (!RRRA) break;
             pWall->picnum = SBMOVE;
@@ -3513,7 +3513,7 @@ default_case:
                         {
                             if ((PN(spriteNum) == HULK || (PN(spriteNum) == HULKSTAYPUT)))
                             {
-                                if ((krand2() >> 8) >= (255 - GREEN_BLOOD_FREQUENCY))
+                                if ((krand2() >> 8) >= (255 - RR_COLORED_BLOOD_FREQUENCY))
                                     sprite[newSprite].pal = 8;
                                 else
                                     sprite[newSprite].pal = 0;

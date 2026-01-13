@@ -34,7 +34,7 @@ extern "C" {
 #endif
 
 //unmaker
-#define GREEN_BLOOD_FREQUENCY 150
+#define RR_COLORED_BLOOD_FREQUENCY 150
 
 #define MAXCYCLERS      1024
 #define MAXANIMATES     1024
